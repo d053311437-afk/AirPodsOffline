@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.ViewGroup
@@ -32,9 +33,9 @@ class MainActivity : AppCompatActivity() {
         val root = LinearLayout(this).apply {
             orientation=LinearLayout.VERTICAL; setPadding(42,50,42,30); setBackgroundColor(Color.rgb(246,247,251))
         }
-        root.addView(TextView(this).apply { text="האוזניות שלי"; textSize=30f; setTextColor(Color.rgb(20,25,35)); gravity=Gravity.END })
-        root.addView(TextView(this).apply { text="סוללה וחיבור • עובד אופליין"; textSize=16f; setTextColor(Color.GRAY); gravity=Gravity.END })
-        val refresh=Button(this).apply { text="רענון אוזניות"; setOnClickListener{ load() } }
+        root.addView(TextView(this).apply { text="AirPods Offline"; textSize=30f; setTypeface(typeface, Typeface.BOLD); setTextColor(Color.rgb(20,25,35)); gravity=Gravity.END })
+        root.addView(TextView(this).apply { text="סוללה וחיבור • עובד אופליין • ללא חשבון"; textSize=16f; setTextColor(Color.GRAY); gravity=Gravity.END })
+        val refresh=Button(this).apply { text="רענן אוזניות"; textSize=17f; isAllCaps=false; setOnClickListener{ load() } }
         root.addView(refresh, ViewGroup.LayoutParams(-1,-2))
         list=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL }
         root.addView(list, ViewGroup.LayoutParams(-1,-1))
@@ -62,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         box.addView(TextView(this).apply { text=d.name ?: "אוזניות Bluetooth"; textSize=21f; gravity=Gravity.END; setTextColor(Color.BLACK) })
         val battery = batteryLevel(d)
         box.addView(TextView(this).apply {
-            text= if(battery>=0) "סוללה: $battery%" else "סוללה: ממתין לנתון מהאוזניות"
+            text= if(battery in 0..100) "סוללה: $battery%" else "סוללה: לא זמין כרגע"
             textSize=17f; gravity=Gravity.END
         })
         list.addView(box, LinearLayout.LayoutParams(-1,-2).apply { setMargins(0,20,0,0) })
