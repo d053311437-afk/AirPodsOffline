@@ -16,7 +16,8 @@ jobs:
         with:
           gradle-version: '8.9'
       - run: gradle assembleDebug
+      - run: cp app/build/outputs/apk/debug/app-debug.apk AirPodsOffline-v1.1.0.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: AirPodsOffline-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: AirPodsOffline-v1.1.0
+          path: AirPodsOffline-v1.1.0.apk
