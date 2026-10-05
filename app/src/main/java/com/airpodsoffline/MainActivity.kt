@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothManager
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Typeface
+import android.content.*
 import android.os.Bundle
 import android.view.Gravity
 import android.view.ViewGroup
@@ -17,6 +18,9 @@ import androidx.core.app.ActivityCompat
 class MainActivity : AppCompatActivity() {
     private lateinit var list: LinearLayout
     private val adapter by lazy { (getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter }
+    private val receiver=object:BroadcastReceiver(){
+        override fun onReceive(c:Context?,i:Intent?){ load() }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +32,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onRequestPermissionsResult(r:Int,p:Array<out String>,g:IntArray){ super.onRequestPermissionsResult(r,p,g); draw() }
+    override fun onStart(){ super.onStart(); registerReceiver(receiver,IntentFilter().apply{
+        addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
+        addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
+        addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
+        addAction("android.bluetooth.device.action.BATTERY_LEVEL_CHANGED")
+    }) }
+    override fun onStop(){ try{unregisterReceiver(receiver)}catch(_:Exception){}; super.onStop() }
+    override fun onResume(){ super.onResume(); if(::list.isInitialized) load() }
 
     private fun draw() {
         val root = LinearLayout(this).apply {
